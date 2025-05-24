@@ -1,3 +1,5 @@
+"use client"
+
 import { ContractAuditForm } from '@/components/contract/ContractAuditForm'
 import { ContractAuditResults } from '@/components/contract/ContractAuditResults'
 import { useState } from 'react'
