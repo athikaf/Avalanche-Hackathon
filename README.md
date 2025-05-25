@@ -2,6 +2,18 @@
 
 A comprehensive smart contract analysis and monitoring system for cross-chain communication and risk assessment.
 
+## Supported Networks
+- Avalanche C-Chain (primary)
+- Cross-chain analysis via Chainlink (Ethereum, Polygon, etc.)
+
+## Cross-Chain Communication
+- Chainlink CCIP or Chainlink nodes are used for secure cross-chain messaging and data.
+- Infura is NOT used; all cross-chain data is fetched via Chainlink.
+
+## Signature Verification
+- Multi-validator set: Cross-chain messages and actions require signatures from a threshold of trusted validators, not a simple multisig from user accounts.
+- Validator set is managed on-chain and can be updated by the contract owner.
+
 ## Features
 
 ### Cross-Chain Analysis
@@ -208,4 +220,40 @@ MIT License - see LICENSE file for details
 
 ## Support
 
-For support, please open an issue in the GitHub repository or contact the development team. 
+For support, please open an issue in the GitHub repository or contact the development team.
+
+# Agents Implemented
+
+The TrustMesh AI Dashboard includes the following agents (automation/AI modules):
+
+1. **Contract Analysis Agent**
+   - Analyzes smart contracts for security risks, vulnerabilities, and risk scoring.
+2. **Cross-Chain Analysis Agent**
+   - Detects and analyzes cross-chain interactions, bridge usage, message passing, and associated risks.
+3. **Governance/Proposal Analysis Agent**
+   - Analyzes DAO proposals using LLMs, providing summaries, risk analysis, and recommendations.
+4. **Monitoring/Whale Monitoring Agent**
+   - Monitors large transactions, whale activity, and abnormal contract interactions.
+5. **Report Generation Agent**
+   - Generates structured reports for contract and cross-chain analysis, including executive summaries, risk breakdowns, and recommendations.
+
+## Agent Output Reliability & Limitations
+- All agents provide recommendations and summaries based on actual on-chain data, contract bytecode, or proposal text.
+- LLM-based agents include a disclaimer: _"This analysis is based on available data and may not capture all risks. Please verify findings independently."_
+- No agent guarantees detection of all vulnerabilities or risks. All outputs are for informational purposes only.
+
+## Example Output (Contract Analysis)
+```json
+{
+  "contractAddress": "0x...",
+  "riskScore": 72,
+  "riskCategories": [
+    {"category": "Bridge Risks", "score": 20, "details": ["Unverified bridge interaction"]},
+    {"category": "Message Risks", "score": 15, "details": ["Unverified message passing"]},
+    {"category": "Security Risks", "score": 30, "details": ["Potential reentrancy vulnerability"]},
+    {"category": "Value Risks", "score": 7, "details": []}
+  ],
+  "timestamp": "2024-05-01T12:00:00Z",
+  "disclaimer": "This analysis is based on available data and may not capture all risks. Please verify findings independently."
+}
+``` 

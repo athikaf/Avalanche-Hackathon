@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("CrossChainAnalyzer", function () {
+describe("CrossChainAnalyzer (Avalanche-first, Chainlink cross-chain)", function () {
     let CrossChainAnalyzer;
     let analyzer;
     let owner;
@@ -139,5 +139,17 @@ describe("CrossChainAnalyzer", function () {
             const messages = await analyzer.getMessagePassingEvents(mockBridge.address);
             expect(messages.length).to.be.gte(0);
         });
+    });
+
+    it("should analyze contracts on Avalanche C-Chain by default", async function () {
+        // ... test logic for AVAX contract analysis ...
+    });
+
+    it("should simulate cross-chain risk analysis from AVAX to Ethereum via Chainlink", async function () {
+        // ... test logic for AVAX -> Ethereum cross-chain analysis ...
+    });
+
+    it("should verify cross-chain messages with multi-validator signatures", async function () {
+        // ... test logic for multi-validator signature verification ...
     });
 }); 

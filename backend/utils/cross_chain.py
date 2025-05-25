@@ -4,6 +4,15 @@ import json
 import os
 from .blockchain import get_web3_connection, get_chain_config
 from datetime import datetime
+import requests
+
+"""
+Cross-chain analysis utilities for TrustMesh AI Dashboard
+
+- Primary chain: Avalanche C-Chain (AVAX)
+- Cross-chain communication: Chainlink CCIP or Chainlink nodes (to Ethereum, Polygon, etc.)
+- Signature verification: Multi-validator set
+"""
 
 # Bridge contract ABIs
 BRIDGE_ABIS = {
@@ -17,6 +26,8 @@ BRIDGE_ABIS = {
         ]''')
     }
 }
+
+CHAINLINK_CROSSCHAIN_RPC = os.getenv("CHAINLINK_CROSSCHAIN_RPC")
 
 class CrossChainAnalyzer:
     def __init__(self):
@@ -231,4 +242,30 @@ class CrossChainAnalyzer:
                     "exists": False,
                     "interactions": []
                 }
-        return communication_map 
+        return communication_map
+
+def analyze_cross_chain_risk(address, source_chain, target_chains):
+    """
+    Analyze cross-chain risk for a contract on Avalanche C-Chain (AVAX) as the source chain.
+    Cross-chain communication is performed via Chainlink to other L1s (Ethereum, Polygon, etc.).
+    """
+    # Example: Use Chainlink CCIP or node API for cross-chain status
+    # This is a placeholder; replace with actual Chainlink API usage
+    if not CHAINLINK_CROSSCHAIN_RPC:
+        return {"error": "Chainlink CCIP endpoint not configured"}
+    try:
+        resp = requests.get(f"{CHAINLINK_CROSSCHAIN_RPC}/cross-chain-status?address={address}")
+        return resp.json()
+    except Exception as e:
+        return {"error": str(e)}
+
+# Placeholder for multi-validator set status (if needed for frontend)
+def get_validator_set_status():
+    """
+    Get the current multi-validator set status for cross-chain signature verification.
+    """
+    # This would call a contract or off-chain service to get validator set info
+    return {
+        "validators": [],
+        "threshold": 0
+    } 

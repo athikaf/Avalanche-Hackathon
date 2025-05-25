@@ -1,14 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+/**
+ * @title CrossChainMessage
+ * @dev This contract is designed for Avalanche C-Chain (AVAX) as the primary network.
+ *      It enables secure cross-chain message passing to other L1s (Ethereum, Polygon, etc.)
+ *      using Chainlink CCIP or Chainlink nodes.
+ *      Signature verification is performed using a multi-validator set.
+ */
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
  * @title CrossChainMessage
  * @dev Contract for handling cross-chain message passing
  */
 contract CrossChainMessage is ReentrancyGuard, Ownable {
+    using ECDSA for bytes32;
+
     struct Message {
         uint256 messageId;
         address sender;
@@ -31,6 +41,10 @@ contract CrossChainMessage is ReentrancyGuard, Ownable {
     
     // Counter for message IDs
     uint256 private _messageIdCounter;
+
+    mapping(address => bool) public isValidator;
+    address[] public validators;
+    uint256 public threshold; // e.g., 2/3+ signatures required
 
     // Events
     event MessageSent(
@@ -59,6 +73,19 @@ contract CrossChainMessage is ReentrancyGuard, Ownable {
         uint256 indexed chainId,
         address indexed verifierContract
     );
+
+    event ValidatorAdded(address indexed validator);
+    event ValidatorRemoved(address indexed validator);
+    event ThresholdChanged(uint256 newThreshold);
+
+    constructor(address[] memory initialValidators, uint256 initialThreshold) {
+        require(initialValidators.length >= initialThreshold, "Threshold too high");
+        for (uint i = 0; i < initialValidators.length; i++) {
+            isValidator[initialValidators[i]] = true;
+            validators.push(initialValidators[i]);
+        }
+        threshold = initialThreshold;
+    }
 
     /**
      * @dev Send a cross-chain message
@@ -197,5 +224,60 @@ contract CrossChainMessage is ReentrancyGuard, Ownable {
         // Implement your signature verification logic here
         // This is a placeholder implementation
         return true;
+    }
+
+    function addValidator(address validator) external onlyOwner {
+        require(!isValidator[validator], "Already validator");
+        isValidator[validator] = true;
+        validators.push(validator);
+        emit ValidatorAdded(validator);
+    }
+
+    function removeValidator(address validator) external onlyOwner {
+        require(isValidator[validator], "Not a validator");
+        isValidator[validator] = false;
+        // Remove from array
+        for (uint i = 0; i < validators.length; i++) {
+            if (validators[i] == validator) {
+                validators[i] = validators[validators.length - 1];
+                validators.pop();
+                break;
+            }
+        }
+        emit ValidatorRemoved(validator);
+    }
+
+    function setThreshold(uint256 newThreshold) external onlyOwner {
+        require(newThreshold > 0 && newThreshold <= validators.length, "Invalid threshold");
+        threshold = newThreshold;
+        emit ThresholdChanged(newThreshold);
+    }
+
+    // Multi-validator signature verification
+    function verifySignatures(bytes32 messageHash, bytes[] calldata signatures) public view returns (bool) {
+        uint256 validCount = 0;
+        address[] memory seen = new address[](signatures.length);
+        for (uint i = 0; i < signatures.length; i++) {
+            address signer = messageHash.toEthSignedMessageHash().recover(signatures[i]);
+            if (isValidator[signer]) {
+                // Prevent double counting
+                bool alreadySeen = false;
+                for (uint j = 0; j < validCount; j++) {
+                    if (seen[j] == signer) {
+                        alreadySeen = true;
+                        break;
+                    }
+                }
+                if (!alreadySeen) {
+                    seen[validCount] = signer;
+                    validCount++;
+                }
+            }
+        }
+        return validCount >= threshold;
+    }
+
+    function getValidators() external view returns (address[] memory) {
+        return validators;
     }
 } 

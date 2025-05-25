@@ -1,3 +1,10 @@
+"""
+TrustMesh AI Dashboard Backend
+
+This backend is built for Avalanche C-Chain (AVAX) as the primary network.
+All contract analysis, monitoring, and reporting are performed on AVAX by default.
+Cross-chain communication and analysis (to Ethereum, Polygon, etc.) are performed via Chainlink CCIP or Chainlink nodes.
+"""
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -14,6 +21,7 @@ from audit.advanced_analysis import (
 )
 from utils.cross_chain import CrossChainAnalyzer
 from reports.cross_chain_report import CrossChainReportGenerator
+from datetime import datetime, timedelta
 
 app = FastAPI(title="TrustMesh AI Dashboard API")
 
@@ -203,6 +211,42 @@ async def generate_cross_chain_report(request: CrossChainRequest):
         return report
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get('/api/v1/analysis/aggregate')
+def get_aggregate_analysis():
+    # Example: Replace with real DB/analysis aggregation
+    return {
+        "contract_types": [
+            {"type": "ERC20", "count": 12},
+            {"type": "Bridge", "count": 5},
+            {"type": "Governance", "count": 3},
+            {"type": "Other", "count": 2}
+        ],
+        "risk_categories": [
+            {"category": "Bridge Risks", "count": 8},
+            {"category": "Message Risks", "count": 6},
+            {"category": "Security Risks", "count": 10},
+            {"category": "Value Risks", "count": 4}
+        ],
+        "disclaimer": "Aggregate data is based on analyzed contracts and may not represent the entire ecosystem."
+    }
+
+@app.get('/api/v1/analysis/timeline')
+def get_risk_timeline():
+    # Example: Replace with real DB/timeseries aggregation
+    today = datetime.utcnow().date()
+    data = []
+    for i in range(7):
+        day = today - timedelta(days=6-i)
+        data.append({
+            "date": day.isoformat(),
+            "riskScore": 60 + i*2,  # Example data
+            "findings": 3 + (i % 2)
+        })
+    return {
+        "timeline": data,
+        "disclaimer": "Timeline data is based on available analysis and may not capture all events."
+    }
 
 if __name__ == "__main__":
     import uvicorn
