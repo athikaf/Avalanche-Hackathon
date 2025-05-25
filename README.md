@@ -1,210 +1,295 @@
 # TrustMesh AI Dashboard
 
-A comprehensive smart contract analysis and monitoring system for cross-chain communication and risk assessment.
-
-## Supported Networks
-- Avalanche C-Chain (primary)
-- Cross-chain analysis via Chainlink (Ethereum, Polygon, etc.)
-
-## Cross-Chain Communication
-- Chainlink CCIP or Chainlink nodes are used for secure cross-chain messaging and data.
-- Infura is NOT used; all cross-chain data is fetched via Chainlink.
-
-## Signature Verification
-- Multi-validator set: Cross-chain messages and actions require signatures from a threshold of trusted validators, not a simple multisig from user accounts.
-- Validator set is managed on-chain and can be updated by the contract owner.
+A comprehensive smart contract auditing and cross-chain risk analysis platform built with FastAPI, Next.js, and Solidity.
 
 ## Features
 
-### Cross-Chain Analysis
-- Bridge interaction detection and monitoring
-- Message passing pattern analysis
-- Cross-chain transaction tracking
-- Risk assessment and scoring
-- Chain communication visualization
+- **Multi-Chain Support**: Primary on Avalanche (AVAX) with cross-chain capabilities via Chainlink CCIP
+- **Smart Contract Auditing**: AI-powered analysis of smart contracts
+- **Cross-Chain Risk Analysis**: Monitor and analyze risks across multiple chains
+- **Governance Integration**: DAO governance and proposal analysis
+- **Whale Monitoring**: Track large transactions and wallet movements
+- **Real-time Alerts**: Instant notifications for critical events
+- **Comprehensive Reporting**: Detailed analysis and risk assessment reports
 
-### Risk Assessment
-- Bridge security analysis
-- Message verification checks
-- Value transfer monitoring
-- Security vulnerability detection
-- Risk score calculation
+## Architecture
 
-### Security Features
-- Reentrancy protection
-- Access control
-- Pausable functionality
-- Whitelisted analyzers
-- Signature verification
+### Backend (FastAPI)
+- RESTful API with WebSocket support
+- Multi-validator signature verification
+- Chainlink CCIP integration
+- Real-time monitoring and alerts
+- Advanced caching with Redis
+- Queue processing with Celery
+- Comprehensive logging and monitoring
 
-### Monitoring
-- Real-time transaction tracking
-- Bridge interaction monitoring
-- Message passing verification
-- Risk score updates
-- Event logging
+### Frontend (Next.js)
+- Modern, responsive UI
+- Real-time updates via WebSocket
+- Multi-chain wallet integration
+- Dark/Light mode support
+- Internationalization
+- PWA support
+- Advanced analytics
 
-## Project Structure
+### Smart Contracts
+- Multi-validator set for cross-chain communication
+- Governance contracts
+- Monitoring contracts
+- Cross-chain message contracts
 
-```
-trustmesh-ai-dashboard/
-├── backend/
-│   ├── audit/
-│   ├── governance/
-│   ├── monitor/
-│   ├── reports/
-│   ├── utils/
-│   ├── Dockerfile
-│   ├── main.py
-│   └── requirements.txt
-├── contracts/
-│   ├── CrossChainAnalyzer.sol
-│   ├── CrossChainBridge.sol
-│   └── CrossChainMessage.sol
-├── docs/
-│   └── API.md
-├── scripts/
-│   ├── deploy.js
-│   └── setup.sh
-├── test/
-│   ├── mocks/
-│   │   ├── MockBridge.sol
-│   │   └── MockMessage.sol
-│   └── CrossChainAnalyzer.test.js
-├── trustmesh_ai_dashboard/
-│   ├── app/
-│   │   ├── activity-monitor/
-│   │   ├── contract-audit/
-│   │   ├── cross-chain-analysis/
-│   │   ├── governance-insights/
-│   │   ├── reports/
-│   │   ├── globals.css
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── components/
-│   ├── next.config.mjs
-│   ├── package.json
-│   ├── tailwind.config.ts
-│   └── tsconfig.json
-├── docker-compose.yml
-├── hardhat.config.js
-├── package.json
-├── README.md
-└── requirements.txt
-```
+## Prerequisites
 
-> **Note:**
-> - The frontend is in `trustmesh_ai_dashboard/` (not `frontend/`).
-> - The backend has additional submodules: `audit/`, `governance/`, `monitor/`.
-> - Root includes scripts, configs, and documentation.
+- Python 3.9+
+- Node.js 16+
+- PostgreSQL 13+
+- Redis 6+
+- Docker and Docker Compose
+- Chainlink Node
+- Access to RPC endpoints for supported chains
 
-## Setup
+## Supported Chains
 
-### Prerequisites
-- Node.js v16+
-- Python 3.8+
-- Solidity 0.8.19+
-- Hardhat
-- FastAPI
-- React/Next.js
+### Mainnet
+- Avalanche (Primary)
+- Ethereum
+- Polygon
+- Arbitrum
+- Optimism
+- Base
 
-### Backend Setup
-1. Install Python dependencies:
-```bash
-cd backend
-pip install -r requirements.txt
-```
+### Testnet
+- Avalanche Fuji
+- Ethereum Goerli
+- Polygon Mumbai
+- Arbitrum Goerli
+- Optimism Goerli
+- Base Goerli
+
+## Quick Start
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-org/trustmesh-ai-dashboard.git
+   cd trustmesh-ai-dashboard
+   ```
 
 2. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
+   ```bash
+   # Copy example environment files
+   cp env_examples/backend.env backend/.env
+   cp env_examples/frontend.env frontend/.env.local
+   cp env_examples/hardhat.env .env
+   cp env_examples/docker-compose.env .env
+   
+   # Update the values in each .env file
+   ```
 
-3. Start the backend server:
-```bash
-uvicorn main:app --reload
-```
+3. Start the development environment:
+   ```bash
+   docker-compose up -d
+   ```
 
-### Frontend Setup
-1. Install Node.js dependencies:
-```bash
-cd trustmesh_ai_dashboard
-npm install
-```
+4. Initialize the database:
+   ```bash
+   docker-compose exec backend alembic upgrade head
+   ```
 
-2. Set up environment variables:
-```bash
-cp .env.example .env.local
-# Edit .env.local with your configuration
-```
+5. Start the development servers:
+   ```bash
+   # Backend
+   cd backend
+   uvicorn main:app --reload
 
-3. Start the development server:
-```bash
-npm run dev
-```
+   # Frontend
+   cd frontend
+   npm run dev
+   ```
 
-### Smart Contract Setup
+## Configuration
+
+### Backend Configuration
+- Server settings
+- Database connection
+- JWT authentication
+- Chainlink integration
+- RPC endpoints
+- Validator configuration
+- Monitoring setup
+- Security settings
+- Logging configuration
+- Cache settings
+- Queue configuration
+- Backup settings
+
+### Frontend Configuration
+- API endpoints
+- Chain configuration
+- RPC endpoints
+- Contract addresses
+- Analytics integration
+- Feature flags
+- Security settings
+- Performance optimization
+- Error tracking
+- UI/UX settings
+- Social media integration
+- Documentation links
+
+### Smart Contract Configuration
+- Network settings
+- Contract addresses
+- Validator configuration
+- Chainlink settings
+- Gas optimization
+- Security settings
+- Testing configuration
+- Documentation generation
+- Monitoring setup
+- Backup configuration
+
+### Docker Configuration
+- Database tuning
+- Redis optimization
+- Monitoring setup
+- Chainlink node configuration
+- Backup system
+- Security settings
+
+## Development
+
+### Backend Development
+1. Set up Python virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+   pip install -r requirements.txt
+   ```
+
+2. Run tests:
+   ```bash
+   pytest
+   ```
+
+3. Start development server:
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+### Frontend Development
 1. Install dependencies:
-```bash
-npm install --save-dev hardhat @nomiclabs/hardhat-ethers ethers @openzeppelin/contracts
-```
+   ```bash
+   npm install
+   ```
+
+2. Run tests:
+   ```bash
+   npm test
+   ```
+
+3. Start development server:
+   ```bash
+   npm run dev
+   ```
+
+### Smart Contract Development
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
 2. Compile contracts:
-```bash
-npx hardhat compile
-```
+   ```bash
+   npx hardhat compile
+   ```
 
 3. Run tests:
-```bash
-npx hardhat test
-```
+   ```bash
+   npx hardhat test
+   ```
 
-## API Endpoints
+## Deployment
 
-### Contract Analysis
-- `POST /api/v1/analyze` - Analyze a contract
-- `GET /api/v1/analysis/{address}` - Get analysis results
-- `GET /api/v1/risks/{address}` - Get risk assessment
+### Production Deployment
+1. Set up production environment variables
+2. Configure SSL/TLS certificates
+3. Set up monitoring and alerting
+4. Configure backup systems
+5. Deploy using Docker Compose:
+   ```bash
+   docker-compose -f docker-compose.prod.yml up -d
+   ```
 
-### Monitoring
-- `GET /api/v1/monitor/bridge/{address}` - Monitor bridge interactions
-- `GET /api/v1/monitor/messages/{address}` - Monitor message passing
-- `GET /api/v1/monitor/risks/{address}` - Monitor risk changes
-
-## Smart Contracts
-
-### CrossChainAnalyzer
-- Analyzes cross-chain interactions
-- Calculates risk scores
-- Identifies security vulnerabilities
-- Tracks bridge and message events
-
-### CrossChainBridge
-- Handles bridge transactions
-- Manages cross-chain transfers
-- Verifies bridge interactions
-- Tracks transaction status
-
-### CrossChainMessage
-- Manages cross-chain messages
-- Verifies message authenticity
-- Tracks message status
-- Handles message processing
+### Vercel Deployment
+1. Connect your GitHub repository to Vercel
+2. Configure environment variables
+3. Deploy:
+   ```bash
+   vercel --prod
+   ```
 
 ## Security
 
-### Access Control
-- Owner-only functions
-- Whitelisted analyzers
-- Pausable functionality
-- Reentrancy protection
+### Security Features
+- Multi-validator signature verification
+- Rate limiting
+- CORS protection
+- CSRF protection
+- HSTS
+- Content Security Policy
+- Secure cookie settings
+- Input validation
+- SQL injection protection
+- XSS protection
+- Regular security audits
 
-### Risk Management
-- Bridge security checks
-- Message verification
-- Value transfer monitoring
-- Vulnerability detection
+### Security Best Practices
+1. Use strong, unique passwords
+2. Enable 2FA where available
+3. Regularly rotate API keys and secrets
+4. Use environment-specific configurations
+5. Implement proper access controls
+6. Monitor and log all access attempts
+7. Keep dependencies updated
+8. Use HTTPS for all communications
+9. Implement proper CORS policies
+10. Use secure session management
+
+## Monitoring
+
+### Monitoring Setup
+- Prometheus metrics
+- Grafana dashboards
+- AlertManager configuration
+- Log aggregation
+- Performance monitoring
+- Error tracking
+- Chain monitoring
+- Validator monitoring
+- Cross-chain monitoring
+
+### Alerting
+- Email notifications
+- Slack integration
+- Discord integration
+- Telegram integration
+- Custom webhook support
+- Alert thresholds
+- Alert grouping
+- Alert routing
+- Alert silencing
+
+## Backup
+
+### Backup Configuration
+- Automated backups
+- Backup scheduling
+- Retention policies
+- Encryption
+- Cross-region replication
+- Backup verification
+- Restore testing
+- Disaster recovery
 
 ## Contributing
 
@@ -216,11 +301,16 @@ npx hardhat test
 
 ## License
 
-MIT License - see LICENSE file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
-For support, please open an issue in the GitHub repository or contact the development team.
+- Documentation: [docs.trustmesh.com](https://docs.trustmesh.com)
+- API Documentation: [api-docs.trustmesh.com](https://api-docs.trustmesh.com)
+- Support: [support.trustmesh.com](https://support.trustmesh.com)
+- Discord: [discord.gg/trustmesh](https://discord.gg/trustmesh)
+- Telegram: [t.me/trustmesh](https://t.me/trustmesh)
+- Twitter: [@trustmesh](https://twitter.com/trustmesh)
 
 # Agents Implemented
 
